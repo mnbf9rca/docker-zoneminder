@@ -1,12 +1,4 @@
-FROM phusion/baseimage:0.9.18
-
-MAINTAINER mnbf9rca
-
-VOLUME ["/config"]
-
-EXPOSE 80
-
-RUN export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
+export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
 apt-get update && \
 apt-get install -y \
 software-properties-common \
@@ -28,23 +20,13 @@ libvlc-dev \
 libvlccore-dev vlc && \
 a2enmod cgi && \
 service apache2 restart && \
-service mysql restart && \
-rm -r /etc/init.d/zoneminder && \
-mkdir -p /etc/my_init.d
+service mysql restart 
 
-ADD zoneminder /etc/init.d/zoneminder
-ADD firstrun.sh /etc/my_init.d/firstrun.sh
 ADD apache.conf /etc/zm/apache.conf
 
-RUN chmod +x /etc/init.d/zoneminder && \
-chmod +x /etc/my_init.d/firstrun.sh && \
-mkdir /etc/apache2/conf.d && \
+
+RUN mkdir /etc/apache2/conf.d && \
 ln -s /etc/zm/apache.conf /etc/apache2/conf.d/zoneminder.conf && \
 ln -s /etc/zm/apache.conf /etc/apache2/conf-enabled/zoneminder.conf && \
 adduser www-data video && \
-service apache2 restart && \
-cp /etc/zm/apache.conf /root/apache.conf && \
-cp /etc/zm/zm.conf /root/zm.conf && \
-update-rc.d -f apache2 remove && \
-update-rc.d -f mysql remove && \
-update-rc.d -f zoneminder remove
+service apache2 restart
