@@ -34,7 +34,7 @@ ADD apache.conf /etc/zm/apache.conf
 
 
 RUN mkdir /etc/apache2/conf.d && \
-lns /etc/zm/apache.conf /etc/apache2/conf.d/zoneminder.conf && \
-lns /etc/zm/apache.conf /etc/apache2/conf-enabled/zoneminder.conf && \
+ln -s /etc/zm/apache.conf /etc/apache2/conf.d/zoneminder.conf && \
+ln -s /etc/zm/apache.conf /etc/apache2/conf-enabled/zoneminder.conf && \
 adduser www-data video && \
 service apache2 restart
