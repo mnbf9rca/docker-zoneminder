@@ -8,12 +8,12 @@ EXPOSE 80
 
 RUN export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
 apt-get update && \
-apt-get instally \
+apt-get install -y \
 software-properties-common \
 python-software-properties && \
-add-apt-repositoryy ppa:iconnor/zoneminder-master && \
+add-apt-repository -y ppa:iconnor/zoneminder-master && \
 apt-get update && \
-apt-get install \
+apt-get install -y \
 wget \
 apache2 \
 mysql-server \
@@ -22,7 +22,7 @@ libapache2-mod-php5 \
 usbutils && \
 service apache2 restart && \
 service mysql restart && \
-apt-get instally \
+apt-get install -y \
 zoneminder \
 libvlc-dev \
 libvlccore-dev vlc && \
