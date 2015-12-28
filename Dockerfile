@@ -34,6 +34,7 @@ mkdir -p /etc/my_init.d
 
 ADD zoneminder /etc/init.d/zoneminder
 ADD firstrun.sh /etc/my_init.d/firstrun.sh
+ADD apache.conf /etc/zm/apache.conf
 
 RUN chmod +x /etc/init.d/zoneminder && \
 chmod +x /etc/my_init.d/firstrun.sh && \
