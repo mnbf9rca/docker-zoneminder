@@ -1,6 +1,6 @@
 FROM phusion/baseimage:0.9.16
 
-MAINTAINER aptalca
+MAINTAINER mnbf9rca
 
 VOLUME ["/config"]
 
@@ -11,7 +11,7 @@ apt-get update && \
 apt-get install -y \
 software-properties-common \
 python-software-properties && \
-add-apt-repository -y ppa:iconnor/zoneminder && \
+add-apt-repository -y ppa:iconnor/zoneminder-master && \
 apt-get update && \
 apt-get install -y \
 wget \
