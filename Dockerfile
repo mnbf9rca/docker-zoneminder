@@ -13,7 +13,7 @@ software-properties-common \
 python-software-properties && \
 add-apt-repositoryy ppa:iconnor/zoneminder-master && \
 apt-get update && \
-apt-get instally \
+apt-get install \
 wget \
 apache2 \
 mysql-server \
