@@ -30,15 +30,6 @@ libvlccore-dev \
 vlc && \
 sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/cli/php.ini && \
 sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/apache2/php.ini && \
-mysql < /usr/share/zoneminder/db/zm_create.sql && \
-service mysql stop && \
-mkdir /config && \
-chmod -R go+rw /config && \
-mv /var/lib/mysql/zm /config/ && \
-ln -s /config/zm/ /var/lib/mysql/zm/ && \
-chown -R mysql:mysql /var/lib/mysql && \
-service mysql start && \
-mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';" && \
 a2enmod cgi && \
 a2enmod rewrite && \
 a2enconf zoneminder && \
