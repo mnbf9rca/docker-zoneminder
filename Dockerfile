@@ -6,9 +6,6 @@ VOLUME ["/config"]
 
 EXPOSE 80
 
-# add my startup script
-ADD startservices.sh /etc/my_init.d/startservices.sh
-
 RUN export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
 apt-get update && \
 apt-get install -y \
@@ -49,8 +46,12 @@ service apache2 restart && \
 service mysql restart && \
 adduser www-data video && \
 service apache2 restart && \
-chmod 775 /etc/zm/zm.conf && \
-chmod +x /etc/my_init.d/startservices.sh
+chmod 775 /etc/zm/zm.conf
+
+# add my startup script
+ADD startup.sh /etc/my_init.d/startup.sh
+
+RUN chmod +x /etc/my_init.d/startup.sh
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
