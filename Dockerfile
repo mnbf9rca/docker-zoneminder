@@ -25,7 +25,9 @@ service mysql restart && \
 apt-get install -y \
 zoneminder \
 libvlc-dev \
-libvlccore-dev vlc && \
+libvlccore-dev \
+vlc && \
+mysql -uroot -p -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';" && \
 a2enmod cgi && \
 service apache2 restart && \
 service mysql restart 
