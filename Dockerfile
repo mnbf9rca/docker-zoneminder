@@ -18,6 +18,7 @@ wget \
 apache2 \
 mysql-server \
 php5 \
+php5-gd \
 libapache2-mod-php5 \
 usbutils && \
 service apache2 restart && \
@@ -27,16 +28,13 @@ zoneminder \
 libvlc-dev \
 libvlccore-dev \
 vlc && \
-mysql -uroot -p -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';" && \
+sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/cli/php.ini && \
+sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/apache2/php.ini && \
+mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';" && \
 a2enmod cgi && \
+a2enmod rewrite && \
+a2enconf zoneminder && \
 service apache2 restart && \
-service mysql restart 
-
-ADD apache.conf /etc/zm/apache.conf
-
-
-RUN mkdir /etc/apache2/conf.d && \
-ln -s /etc/zm/apache.conf /etc/apache2/conf.d/zoneminder.conf && \
-ln -s /etc/zm/apache.conf /etc/apache2/conf-enabled/zoneminder.conf && \
+service mysql restart && \
 adduser www-data video && \
 service apache2 restart
