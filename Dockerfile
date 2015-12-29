@@ -6,6 +6,7 @@ VOLUME ["/config"]
 
 EXPOSE 80
 
+# add my startup script
 ADD startservices.sh /etc/my_init.d/startservices.sh
 
 RUN export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
@@ -35,8 +36,10 @@ sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/a
 mysql < /usr/share/zoneminder/db/zm_create.sql && \
 service mysql stop && \
 mkdir /config && \
+chmod -R go+rw /config && \
 mv /var/lib/mysql/zm /config/ && \
 ln -s /config/zm/ /var/lib/mysql/zm/ && \
+chown -R mysql:mysql /var/lib/mysql && \
 service mysql start && \
 mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';" && \
 a2enmod cgi && \
@@ -49,5 +52,6 @@ service apache2 restart && \
 chmod 775 /etc/zm/zm.conf && \
 chmod +x /etc/my_init.d/startservices.sh
 
-CMD /etc/my_init.d/startservices.sh
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
 
