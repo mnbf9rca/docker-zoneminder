@@ -1,4 +1,8 @@
-  # check if there is a /config/zm folder. 
+ 
+#!/bin/bash
+  
+
+ # check if there is a /config/zm folder. 
   # - If there is, and if it has content, assume the DB is in it and so update the DB.
   # - if there isn't, create it
   
