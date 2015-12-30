@@ -40,9 +40,9 @@ service apache2 restart && \
 chmod 775 /etc/zm/zm.conf
 
 # add my startup script & clean up APT when done.
-ADD startup.sh /etc/my_init.d/startup.sh
+ADD startup.sh /root/startup.sh
 
-RUN chmod +x /etc/my_init.d/startup.sh && \
+RUN chmod +x /root/startup.sh && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
