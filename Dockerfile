@@ -39,10 +39,10 @@ adduser www-data video && \
 service apache2 restart && \
 chmod 775 /etc/zm/zm.conf
 
-# add my startup script
-ADD startup.sh /etc/my_init.d/startup.sh
+# add my startup script but for now don't set to auto start
+ADD startup.sh /root/startup.sh
 
-RUN chmod +x /etc/my_init.d/startup.sh
+RUN chmod +x /root/startup.sh
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
