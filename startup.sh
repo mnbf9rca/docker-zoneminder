@@ -42,5 +42,3 @@
   service apache2 start
   service zoneminder start
 
-#exit zero so we stay running - see what's wrong in logs??
-exit 0
