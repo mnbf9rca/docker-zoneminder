@@ -41,8 +41,10 @@ chmod 775 /etc/zm/zm.conf
 
 # add my startup script & clean up APT when done.
 ADD startup.sh /root/startup.sh
+ADD atboot.sh /etc/my_init.d/atboot.sh
 
 RUN chmod +x /root/startup.sh && \
+chmod +x /etc/my_init.d/atboot.sh && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
