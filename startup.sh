@@ -10,19 +10,25 @@
     echo "/config/zm not empty; creating symlink and updating schema"
     # rm /var/lib/mysql/zm # <-- not sure if we need this?
     chmod -R go+rw /config
-    ln -s /config/zm/ /var/lib/mysql/zm/
+    ln -s /config/zm/ /var/lib/mysql/
     chown -R mysql:mysql /var/lib/mysql
+    service mysql start
+    mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
     /usr/bin/zmupdate.pl
   else
     echo "/config/zm not found or empty; creating symlink and creating DB"
     mkdir --parents /config/zm
     chmod -R go+rw /config
-    ln -s /config/zm/ /var/lib/mysql/zm/
-    chown -R mysql:mysql /var/lib/mysql    
+    ln -s /config/zm/ /var/lib/mysql/
+    chown -R mysql:mysql /var/lib/mysql  
+    service mysql start
     mysql < /usr/share/zoneminder/db/zm_create.sql
+    mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
   fi
-   # always update permissions for mysql      
-      mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
+   # always update permissions for mysql     
+   echo "resetting permissions"
+   
+  
   
   #Get docker env timezone and set system timezone
   echo "setting the correct local time"
@@ -36,6 +42,6 @@
   mount -t tmpfs -o rw,nosuid,nodev,noexec,relatime,size=${MEM:-4096M} tmpfs /dev/shm
   
   echo "starting services"
-  service mysql start
+  
   service apache2 start
   service zoneminder start
