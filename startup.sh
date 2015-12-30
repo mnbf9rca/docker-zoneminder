@@ -1,5 +1,4 @@
- 
-#!/bin/bash
+#!/bin/sh
   
 
  # check if there is a /config/zm folder. 
