@@ -8,7 +8,11 @@
   
   if [ "$(ls -A /config/zm)" ]; then
     echo "/config/zm not empty; creating symlink and updating schema"
-    # rm /var/lib/mysql/zm # <-- not sure if we need this?
+    if [ "$(ls -A /var/lib/mysql/zm)" ]; then
+    echo "moving old db /zm"
+     service mysql stop
+     mv /var/lib/mysql/zm /var/lib/mysql/zm-old
+    fi
     chmod -R go+rw /config
     ln -s /config/zm/ /var/lib/mysql/
     chown -R mysql:mysql /var/lib/mysql
@@ -25,8 +29,7 @@
     mysql < /usr/share/zoneminder/db/zm_create.sql
     mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
   fi
-   # always update permissions for mysql     
-   echo "resetting permissions"
+
    
   
   
