@@ -52,8 +52,20 @@
     mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
   fi
 
-   
+  #checking for zm.conf
+  if [ "$(ls -A /config/zm.conf)" ]; then
+    echo "Found /config/zm.conf so reusing"
+    echo "...renaming existing /etc/zm/zm.conf"
+    mv --force /etc/zm/zm.conf /etc/zm/zm.conf.install
+  else
+    echo "no config file found on /config/"
+    echo "...moving existing file"
+    mv --force /etc/zm/zm.conf /config/zm.conf
+  fi
   
+  # and regardless of what happened above, create a symlink to zm.conf
+    echo "...creating symlink"
+    ln -s /config/zm/zm.conf /etc/zm/zm.conf  
   
   #Get docker env timezone and set system timezone
   echo "setting the correct local time"
