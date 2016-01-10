@@ -63,6 +63,4 @@
   
   echo "starting other services"
   service apache2 start
-  
-  exit 0
-
+  service zoneminder start
