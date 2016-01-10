@@ -14,16 +14,18 @@
      echo "......moving old db /zm"
      mv --force /var/lib/mysql/zm /var/lib/mysql/zm-old
     fi
+    echo "...starting mysql"
+    service mysql start
     echo "...creating temporary instance of db (to ensure references ok)"
     mysql < /usr/share/zoneminder/db/zm_create.sql
     echo "...stopping mysql"
     service mysql stop
     echo "...removing temporary db /zm"
-    mv --recursive --force /var/lib/mysql/zm
+    rm --recursive --force /var/lib/mysql/zm
     echo "...setting permissions"
     chmod --recursive --silent go+rw /config
     echo "...creating symlink"
-    ln -s /config/zm/ /var/lib/mysql/
+    ln -s /config/zm/ /var/lib/mysql
     echo "...setting owner"
     chown --recursive --silent mysql:mysql /var/lib/mysql
     echo "...starting mysql"
