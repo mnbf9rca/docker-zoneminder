@@ -2,7 +2,9 @@ FROM phusion/baseimage:0.9.18
 
 MAINTAINER mnbf9rca
 
-VOLUME ["/config"]
+# /config - where we will put the DB
+# /var/cache/zoneminder - events, images and temp
+VOLUME ["/config", "/var/cache/zoneminder"]
 
 EXPOSE 80
 
