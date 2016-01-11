@@ -23,7 +23,8 @@ php5 \
 php5-gd \
 libapache2-mod-php5 \
 usbutils && \
-service apache2 restart && \
+service apache2 restart  && \
+sed -i '/\[mysqld\]/ainnodb_file_per_table' /etc/mysql/my.cnf && \
 service mysql restart && \
 apt-get install -y \
 zoneminder \
