@@ -65,7 +65,9 @@
   
   # and regardless of what happened above, create a symlink to zm.conf
     echo "...creating symlink"
-    ln -s /config/zm/zm.conf /etc/zm/zm.conf  
+    ln -s /config/zm.conf /etc/zm/zm.conf
+    echo "...setting permissions on zm.conf"
+    chown www-data:www-data /etc/zm/zm.conf
   
   #Get docker env timezone and set system timezone
   echo "setting the correct local time"
@@ -75,4 +77,4 @@
   
   echo "starting other services"
   service apache2 start
-  # service zoneminder start
+  service zoneminder start
