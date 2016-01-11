@@ -3,14 +3,7 @@
 # first, remove the existing mySQL data folder
  echo "Stopping mysql"
  service mysql stop
- echo -n "Removing existing mysql data dir /var/lib/mysql/ ... "
- mv --force /var/lib/mysql /var/lib/mysql-old
- if [ "$?" = "0" ]; then
-		echo "OK"
-	else
-		echo "Failed"
-		exit 30
-fi
+
 # check if there is a /config/mysql folder. 
 # - If there is, and if it has content, assume the DB is in it and so update the DB.
 # - if there isn't, create it
@@ -62,14 +55,16 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 	/usr/bin/zmupdate.pl
 else
 	echo "/config/mysql not found; creating symlink and creating DB"
-	echo -n "...creating /config/mysql ..."
-	mkdir /config/mysql
-		if [ "$?" = "0" ]; then
+	
+	echo -n "...moving existing mysql data dir /var/lib/mysql/ to /config/mysql ... "
+	 mv --force /var/lib/mysql /config/
+	 if [ "$?" = "0" ]; then
 			echo "OK"
 		else
 			echo "Failed"
-			exit 41
-		fi
+			exit 30
+	fi
+
 	echo -n "...setting permissions ..."
 	chmod -R go+rw /config
 		if [ "$?" = "0" ]; then
@@ -78,6 +73,7 @@ else
 			echo "Failed"
 			exit 42
 		fi
+
 	
 	echo -n "...creating symlink ... "
 	ln -s /config/mysql /var/lib/
