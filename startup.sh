@@ -21,7 +21,7 @@ if [ "$(ls -Ad /config/zm)" ]; then
 	fi
 	echo "...starting mysql"
 	service mysql start
-	echo -n"...creating temporary instance of db (to ensure references ok) ... "
+	echo -n "...creating temporary instance of db (to ensure references ok) ... "
 	mysql < /usr/share/zoneminder/db/zm_create.sql
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -29,15 +29,15 @@ if [ "$(ls -Ad /config/zm)" ]; then
 			echo "Failed"
 			exit 31
 		fi
-	echo -n "...stopping mysql ... "
+	echo "...stopping mysql ... "
 	service mysql stop
 	 if [ "$?" = "0" ]; then
-			echo "OK"
+			echo "MySQL stopped"
 		else
 			echo "Failed"
 			exit 32
 		fi
-	echo -n "...removing temporary db /zm ... "
+	echo -n "...removing temporary db /var/lib/mysql/zm ... "
 	rm --recursive --force /var/lib/mysql/zm
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -45,7 +45,14 @@ if [ "$(ls -Ad /config/zm)" ]; then
 			echo "Failed"
 			exit 33
 		fi
-	
+	echo -n "...creating symlink ..."
+	ln -s /config/zm /var/lib/mysql/
+		if [ "$?" = "0" ]; then
+			echo "OK"
+		else
+			echo "Failed"
+			exit 35
+		fi	
 	echo -n "...setting permissions ... "
 	chmod --recursive --silent go+rw /config
 		if [ "$?" = "0" ]; then
@@ -53,14 +60,6 @@ if [ "$(ls -Ad /config/zm)" ]; then
 		else
 			echo "Failed"
 			exit 34
-		fi
-	echo -n "...creating symlink ..."
-	ln -s /config/zm/ /var/lib/mysql
-		if [ "$?" = "0" ]; then
-			echo "OK"
-		else
-			echo "Failed"
-			exit 35
 		fi
 		
 	echo -n "...setting owner ... "
