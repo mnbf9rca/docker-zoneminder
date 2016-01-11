@@ -192,6 +192,54 @@
   	    echo "Failed"
   	    exit 54
       fi
+      
+  # check and set permissions on event dirs
+  # from https://github.com/ZoneMinder/ZoneMinder/blob/master/zmlinkcontent.sh.in
+   echo "Checking whether /var/cache/zoneminder/events exists"
+   if [ "$(ls -Ad /var/cache/zoneminder/events)" ]; then
+   	echo "... found /var/cache/zoneminder/events so not creating a new one"
+   else
+   	echo "... didn't find /var/cache/zoneminder/events folder"
+   	echo -n "... creating folder"
+   	mkdir /var/cache/zoneminder/events
+	if [ "$?" = "0" ]; then
+	     echo "OK"
+	else
+	      echo "Failed"
+	      exit 55
+	fi   	
+   fi
+	echo -n "... changing ownership of the events folder recursively to www-data:www-data ... "
+	chown -R www-data:www-data "/var/cache/zoneminder/events"
+	if [ "$?" = "0" ]; then
+		echo "OK"
+	else
+		echo "Failed"
+		exit 56
+	fi
+	echo "Checking whether /var/cache/zoneminder/images exists"
+	if [ "$(ls -Ad /var/cache/zoneminder/images)" ]; then
+	   echo "... found /var/cache/zoneminder/images so not creating a new one"
+	else
+	   echo "... didn't find /var/cache/zoneminder/images folder"
+	   echo -n "... creating folder"
+	   mkdir /var/cache/zoneminder/images
+	if [ "$?" = "0" ]; then
+	     echo "OK"
+	else
+	      echo "Failed"
+	      exit 57
+	fi   	
+	fi
+
+	echo -n "... changing ownership of the images folder recursively to www-data:www-data ... "
+	chown -R www-data:www-data "/var/cache/zoneminder/images"
+	if [ "$?" = "0" ]; then
+		echo "OK"
+	else
+		echo "Failed"
+		exit 58
+	fi
   
   #Get docker env timezone and set system timezone
   echo "setting the correct local time"
