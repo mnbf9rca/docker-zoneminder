@@ -1,52 +1,24 @@
 #!/bin/sh
 
-# check if there is a /config/zm folder. 
+# first, remove the existing mySQL data folder
+ echo "Stopping mysql"
+ service mysql stop
+ echo -n "Removing existing mysql data dir /var/lib/mysql/ ... "
+ mv --force /var/lib/mysql /var/lib/mysql-old
+ if [ "$?" = "0" ]; then
+		echo "OK"
+	else
+		echo "Failed"
+		exit 30
+fi
+# check if there is a /config/mysql folder. 
 # - If there is, and if it has content, assume the DB is in it and so update the DB.
 # - if there isn't, create it
 
-if [ "$(ls -Ad /config/zm)" ]; then
-	echo "/config/zm not empty; creating symlink and updating schema"
-	if [ "$(ls -A /var/lib/mysql/zm)" ]; then
-	 echo "...found existing folder at /var/lib/mysql/zm"
-	 echo "......stopping mysql"
-	 service mysql stop
-	 echo -n "......moving old db /zm ... "
-	 mv --force /var/lib/mysql/zm /var/lib/mysql/zm-old
-	 if [ "$?" = "0" ]; then
-			echo "OK"
-		else
-			echo "Failed"
-			exit 30
-		fi
-	fi
-	echo "...starting mysql"
-	service mysql start
-	echo -n "...creating temporary instance of db (to ensure references ok) ... "
-	mysql < /usr/share/zoneminder/db/zm_create.sql
-		if [ "$?" = "0" ]; then
-			echo "OK"
-		else
-			echo "Failed"
-			exit 31
-		fi
-	echo "...stopping mysql ... "
-	service mysql stop
-	 if [ "$?" = "0" ]; then
-			echo "MySQL stopped"
-		else
-			echo "Failed"
-			exit 32
-		fi
-	echo -n "...removing temporary db /var/lib/mysql/zm ... "
-	rm --recursive --force /var/lib/mysql/zm
-		if [ "$?" = "0" ]; then
-			echo "OK"
-		else
-			echo "Failed"
-			exit 33
-		fi
+if [ "$(ls -Ad /config/mysql)" ]; then
+	echo "/config/mysql exists; creating symlink and updating schema"
 	echo -n "...creating symlink ..."
-	ln -s /config/zm /var/lib/mysql/
+	ln -s /config/mysql /var/lib/
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
@@ -89,9 +61,9 @@ if [ "$(ls -Ad /config/zm)" ]; then
 	echo "...updating schema"
 	/usr/bin/zmupdate.pl
 else
-	echo "/config/zm not found or empty; creating symlink and creating DB"
-	echo -n "...creating /config/zm ..."
-	mkdir --parents /config/zm
+	echo "/config/mysql not found; creating symlink and creating DB"
+	echo -n "...creating /config/mysql ..."
+	mkdir /config/mysql
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
@@ -108,7 +80,7 @@ else
 		fi
 	
 	echo -n "...creating symlink ... "
-	ln -s /config/zm/ /var/lib/mysql/
+	ln -s /config/mysql /var/lib/
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
