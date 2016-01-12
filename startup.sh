@@ -10,6 +10,16 @@
 
 if [ "$(ls -Ad /config/mysql)" ]; then
 	echo "/config/mysql exists; creating symlink and updating schema"
+	if [ "$(ls -Ad /var/lib/mysql)" ]; then
+		echo -n "...found existing /var/lib/mysql so renaming it ... "
+		mv --force /var/lib/mysql /var/lib/mysql-orig
+			if [ "$?" = "0" ]; then
+					echo "OK"
+				else
+					echo "Failed"
+					exit 33
+			fi
+	fi
 	echo -n "...creating symlink ..."
 	ln -s /config/mysql /var/lib/
 		if [ "$?" = "0" ]; then
@@ -43,7 +53,7 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 			echo "Failed to start MySQL"
 			exit 37
 		fi
-	echo -n "...setting permissions on mysql database ..."
+	echo -n "...setting permissions on mysql database ... "
 	mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -57,15 +67,15 @@ else
 	echo "/config/mysql not found; creating symlink and creating DB"
 	
 	echo -n "...moving existing mysql data dir /var/lib/mysql/ to /config/mysql ... "
-	 mv --force /var/lib/mysql /config/
-	 if [ "$?" = "0" ]; then
-			echo "OK"
-		else
-			echo "Failed"
-			exit 30
-	fi
+	mv --force /var/lib/mysql /config/
+		if [ "$?" = "0" ]; then
+				echo "OK"
+			else
+				echo "Failed"
+				exit 30
+		fi
 
-	echo -n "...setting permissions ..."
+	echo -n "...setting permissions on /config ... "
 	chmod -R go+rw /config
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -75,7 +85,7 @@ else
 		fi
 
 	
-	echo -n "...creating symlink ... "
+	echo -n "...creating symlink /config/mysql --> /var/lib/ ... "
 	ln -s /config/mysql /var/lib/
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -99,7 +109,7 @@ else
 			echo "Failed to start MySQL"
 			exit 45
 		fi
-	echo -n "...creating db ..."
+	echo -n "...creating zoneminder db ... "
 	mysql < /usr/share/zoneminder/db/zm_create.sql
 			if [ "$?" = "0" ]; then
 			echo "OK"
@@ -107,7 +117,7 @@ else
 			echo "Failed"
 			exit 46
 		fi
-	echo -n "...setting permissions ... "
+	echo -n "...setting permissions on DB ... "
 	mysql -u root -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
 		if [ "$?" = "0" ]; then
 			echo "OK"
@@ -140,7 +150,7 @@ else
 		fi
 fi
 
-# and regardless of what happened above, create a symlink to zm.conf
+# and regardless of whether it's new or old, create a symlink to zm.conf
 	echo -n "...creating symlink /config/zm.conf --> /etc/zm/zm.conf ... "
 	ln -s /config/zm.conf /etc/zm/zm.conf
 		if [ "$?" = "0" ]; then
