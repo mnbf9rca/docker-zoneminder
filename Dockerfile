@@ -16,13 +16,16 @@ python-software-properties && \
 add-apt-repository -y ppa:iconnor/zoneminder-master && \
 apt-get update && \
 apt-get install -y \
-wget \
 apache2 \
+libapache2-mod-php5 \
+libvlc-dev \
+libvlccore-dev \
 mysql-server \
 php5 \
 php5-gd \
-libapache2-mod-php5 \
-usbutils && \
+usbutils \
+vlc \
+wget && \
 service apache2 restart  && \
 sed -i '/\[mysqld\]/ainnodb_file_per_table\=1' /etc/mysql/my.cnf && \
 service mysql restart && \
