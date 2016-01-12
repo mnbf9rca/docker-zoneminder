@@ -2,7 +2,9 @@ FROM phusion/baseimage:0.9.18
 
 MAINTAINER mnbf9rca
 
-VOLUME ["/config"]
+# /config - where we will put the DB
+# /var/cache/zoneminder - events, images and temp
+VOLUME ["/config", "/var/cache/zoneminder"]
 
 EXPOSE 80
 
@@ -21,7 +23,8 @@ php5 \
 php5-gd \
 libapache2-mod-php5 \
 usbutils && \
-service apache2 restart && \
+service apache2 restart  && \
+sed -i '/\[mysqld\]/ainnodb_file_per_table\=1' /etc/mysql/my.cnf && \
 service mysql restart && \
 apt-get install -y \
 zoneminder \
