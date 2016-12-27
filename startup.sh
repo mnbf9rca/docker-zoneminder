@@ -12,11 +12,18 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 	echo "/config/mysql exists; creating symlink and updating schema"
 	if [ "$(ls -Ad /var/lib/mysql)" ]; then
 		echo -n "...found existing /var/lib/mysql so renaming it ... "
+		rm --force /var/lib/mysql-orig
+			if [ "$?" = "0" ]; then
+					echo "OK"
+				else
+					echo "Failed removing old /var/lib/mysql-orig"
+					exit 32
+			fi		
 		mv --force /var/lib/mysql /var/lib/mysql-orig
 			if [ "$?" = "0" ]; then
 					echo "OK"
 				else
-					echo "Failed"
+					echo "Failed mv existing /var/lib/mysql"
 					exit 33
 			fi
 	fi
@@ -25,7 +32,7 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed create symlink /config/mysql in /var/lib/"
 			exit 35
 		fi	
 	echo -n "...setting permissions ... "
@@ -33,7 +40,7 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed chmod go+rw /config"
 			exit 34
 		fi
 		
@@ -42,7 +49,7 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed setting mysql:mysql on /var/lib/mysql"
 			exit 36
 		fi
 	echo "...starting mysql"
@@ -58,7 +65,7 @@ if [ "$(ls -Ad /config/mysql)" ]; then
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed setting permissions in mysql db"
 			exit 38
 		fi
 	echo "...updating schema"
@@ -71,16 +78,23 @@ else
 		if [ "$?" = "0" ]; then
 				echo "OK"
 			else
-				echo "Failed"
+				echo "Failed to move /var/lib/mysql to /config/"
 				exit 30
 		fi
 
 	echo -n "...setting permissions on /config ... "
+	chown --recursive www-data:www-data /config
+		if [ "$?" = "0" ]; then
+			echo "OK"
+		else
+			echo "Failed to set owner www-data:www-data on /config"
+			exit 41
+		fi	
 	chmod -R go+rw /config
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed chmod go+rw /config"
 			exit 42
 		fi
 
@@ -90,7 +104,7 @@ else
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed ln /config/mysql to /var/lib/"
 			exit 43
 		fi
 	echo -n "...changing owner /var/lib/mysql ... "
@@ -98,7 +112,7 @@ else
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed set owner mysql:mysql on /var/lib/mysql"
 			exit 44
 		fi
 	echo "...starting mysql"
@@ -114,7 +128,7 @@ else
 			if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to create database"
 			exit 46
 		fi
 	echo -n "...setting permissions on DB ... "
@@ -122,7 +136,7 @@ else
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to set permissions on mysql database"
 			exit 47
 		fi
 fi
@@ -135,7 +149,7 @@ if [ "$(ls -A /config/zm.conf)" ]; then
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to move /etc/zm/zm.conf to /etc/zm/zm.conf.install"
 			exit 51
 		fi
 else
@@ -145,7 +159,7 @@ else
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to move /etc/zm/zm.conf to /config/zm.conf"
 			exit 52
 		fi
 fi
@@ -156,7 +170,7 @@ fi
 		if [ "$?" = "0" ]; then
 		 echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to create symlink of /config/zm.conf to /etc/zm/zm.conf"
 			exit 53
 		fi
 	echo -n "...setting permissions on zm.conf ... "
@@ -164,7 +178,7 @@ fi
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to set owner www-data:www-data on /etc/zm/zm.conf"
 			exit 54
 		fi
 		
@@ -180,7 +194,7 @@ else
 		if [ "$?" = "0" ]; then
 			echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to make events folder /var/cache/zoneminder/events"
 			exit 55
 		fi	 	
 fi
@@ -189,7 +203,7 @@ chown -R www-data:www-data "/var/cache/zoneminder/events"
 	if [ "$?" = "0" ]; then
 		echo "OK"
 	else
-		echo "Failed"
+		echo "Failed to set www-data:www-data as owner of /var/cache/zoneminder/events"
 		exit 56
 	fi
 echo "Checking whether /var/cache/zoneminder/images exists"
@@ -202,7 +216,7 @@ else
 		if [ "$?" = "0" ]; then
 		echo "OK"
 		else
-			echo "Failed"
+			echo "Failed to make dir /var/cache/zoneminder/images"
 			exit 57
 		fi	 	
 fi
@@ -212,7 +226,7 @@ chown -R www-data:www-data "/var/cache/zoneminder/images"
 	if [ "$?" = "0" ]; then
 		echo "OK"
 	else
-		echo "Failed"
+		echo "Failed to set owner www-data:www-data on folder /var/cache/zoneminder/images"
 		exit 58
 	fi
 
