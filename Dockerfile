@@ -38,8 +38,8 @@ zoneminder \
 libvlc-dev \
 libvlccore-dev \
 vlc && \
-sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/cli/php.ini && \
-sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php5/apache2/php.ini && \
+sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php/7.0/cli/php.ini && \
+sed -i 's/\;date\.timezone\ \=/date\.timezone\ \=\ Europe\/London/g' /etc/php/7.0/apache2/php.ini && \
 a2enmod cgi && \
 a2enmod rewrite && \
 a2enconf zoneminder && \
