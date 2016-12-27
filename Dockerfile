@@ -20,13 +20,12 @@ apt-get update && \
 apt-get install -y \
 apache2 \
 ffmpeg \
-libapache2-mod-php5 \
+libapache2-mod-php \
 libvlc-dev \
 libvlccore-dev \
 mysql-server \
 php \
 php-gd \
-libapache2-mod-php \
 php-mysql \
 usbutils \
 vlc \
