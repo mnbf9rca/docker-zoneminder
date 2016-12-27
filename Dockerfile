@@ -15,7 +15,6 @@ software-properties-common \
 python-software-properties && \
 add-apt-repository -y ppa:iconnor/zoneminder-master && \
 apt-get update && \
-apt-get upgrade && \
 apt-get install -y \
 apache2 \
 ffmpeg \
@@ -45,13 +44,16 @@ service apache2 restart && \
 service mysql restart && \
 adduser www-data video && \
 service apache2 restart && \
-chmod 775 /etc/zm/zm.conf
+chmod 775 /etc/zm/zm.conf && \
+apt-get update && \
+apt-get upgrade
 
 # add my startup script & clean up APT when done.
 ADD startup.sh /etc/my_init.d/startup.sh
 # ADD atboot.sh /etc/my_init.d/atboot.sh
 
 RUN chmod +x /etc/my_init.d/startup.sh && \
+apt-get autoremove && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
