@@ -48,8 +48,10 @@ service mysql restart && \
 adduser www-data video && \
 service apache2 restart && \
 chmod 775 /etc/zm/zm.conf && \
-apt-get update && \
-apt-get upgrade
+apt-get update
+
+#&& \
+#apt-get upgrade
 
 # add my startup script & clean up APT when done.
 ADD startup.sh /etc/my_init.d/startup.sh
