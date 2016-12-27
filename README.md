@@ -1,11 +1,6 @@
 ### Zoneminder
 
-#### Install On unRaid:
-
-On unRaid, install from the Community Repositories and enter the app folder location and the port for the webUI.
-
-
-#### Install On Other Platforms (like Ubuntu or Synology 5.2 DSM, etc.):
+#### Install using Docker:
 
 On other platforms, you can run this docker with the following command:
 
@@ -13,10 +8,16 @@ On other platforms, you can run this docker with the following command:
 docker run -d --name="Zoneminder" --privileged=true -v /path/to/config:/config:rw -v /etc/localtime:/etc/localtime:ro -p 80:80 mnbf9rca/zoneminder
 ```
 
+#### tags...
+there are 3 versions:
+latest (or no tag) - stable build, refreshed periodically. Uses master branch.
+dev - development - used for testing updates to stable
+daily - rebuilt daily from master branch - no code changes, but ensures that the lastest patches etc. are installed.
+
 #### Tips and Setup Instructions:
 - This container includes mysql, no need for a separate mysql/mariadb container
 - All settings and library files are stored outside of the container and they are preserved when this docker is updated or re-installed (change the variable "/path/to/config" in the run command to a location of your choice)
-- This container includes avconv (ffmpeg variant) and cambozola but they need to be enabled in the settings. In the WebUI, click on Options in the top right corner and go to the Images tab
+- This container includes avconv (or ffmpeg) but it needs to be enabled in the settings. In the WebUI, click on Options in the top right corner and go to the Images tab
 - Click on the box next to OPT_Cambozola to enable
 - Click on the box next OPT_FFMPEG to enable ffmpeg
 - Enter the following for ffmpeg path: /usr/bin/avconv
@@ -28,4 +29,4 @@ docker run -d --name="Zoneminder" --privileged=true -v /path/to/config:/config:r
 
 #### Changelog:  
 - 2015-10-27 - perl5/ZoneMinder folder is now persistent and available in the config folder to allow easy access for custom perl scripts - usbutils included in the package for usb camera support (needs to be further tested)  
-- 2016-12-27 - updated readme to correct repo
+- 2016-12-27 - updated readme to correct repo, update to 16.04, etc.
