@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.19
 
 MAINTAINER mnbf9rca
 
@@ -15,8 +15,10 @@ software-properties-common \
 python-software-properties && \
 add-apt-repository -y ppa:iconnor/zoneminder-master && \
 apt-get update && \
+apt-get upgrade && \
 apt-get install -y \
 apache2 \
+ffmpeg \
 libapache2-mod-php5 \
 libvlc-dev \
 libvlccore-dev \
