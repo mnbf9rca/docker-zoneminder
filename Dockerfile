@@ -8,6 +8,8 @@ VOLUME ["/config", "/var/cache/zoneminder"]
 
 EXPOSE 80
 
+# might be php7.0-mysql no php-mysql
+ 
 RUN export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive && \
 apt-get update && \
 apt-get install -y \
@@ -22,8 +24,10 @@ libapache2-mod-php5 \
 libvlc-dev \
 libvlccore-dev \
 mysql-server \
-php5 \
-php5-gd \
+php \
+php-gd \
+libapache2-mod-php \
+php-mysql \
 usbutils \
 vlc \
 wget && \
